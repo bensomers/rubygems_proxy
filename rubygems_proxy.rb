@@ -85,6 +85,9 @@ class RubygemsProxy
     elsif cached? && !specs?
       logger.info "Read from cache: #{filepath}"
       open(filepath).read
+    elsif cached? && specs? && fresh_specs?
+      logger.info "Specs are fresh, freshness: #{freshness}. Read specs from cache: #{filepath}"
+      open(filepath).read
     else
       logger.info "Read from interwebz: #{url}"
       # pass the Host header to correctly access the rubygems site
@@ -103,6 +106,14 @@ class RubygemsProxy
 
   def cached?
     File.file?(filepath)
+  end
+
+  def fresh_specs?
+    freshness < 900 # 15 minutes
+  end
+
+  def freshness
+    freshness = Time.now - File.ctime(filepath)
   end
 
   def filepath
