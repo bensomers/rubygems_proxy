@@ -109,7 +109,7 @@ class RubygemsProxy
   end
 
   def fresh_specs?
-    freshness < 900 # 15 minutes
+    freshness < 10 # 10 seconds
   end
 
   def freshness
